@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qing.dao.InformMapper">
+
+    <insert id="addInform" parameterType="inform">
+        insert into crmkhgx.inform (informId, informTitle, informDetail, informTime)
+        values (null,#{informTitle},#{informDetail},#{informTime})
+    </insert>
+
+    <update id="updateInform" parameterType="inform">
+        update crmkhgx.inform set informTitle=#{informTitle},informDetail=#{informDetail},informTime=#{informTime}
+        where informId=#{informId}
+    </update>
+
+    <select id="queryAllInform" parameterType="String" resultType="inform">
+        select * from crmkhgx.inform where 1=1
+        <if test="informMsg != null and informMsg != ''">
+            and informTitle like "%"#{informMsg}"%"
+        </if>
+        order by informTime desc
+    </select>
+
+    <delete id="deleteInform" parameterType="int">
+        delete from crmkhgx.inform where informId = #{informId}
+    </delete>
+
+</mapper>

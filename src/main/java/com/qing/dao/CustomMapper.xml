@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qing.dao.CustomMapper">
+
+    <insert id="addCustom" parameterType="custom">
+        insert into crmkhgx.custom (customId, customName, customFrom, customWork, customLevel, customTel, customPhone, customCode, customAddress)
+        values (null,#{customName},#{customFrom},#{customWork},#{customLevel},#{customTel},#{customPhone},#{customCode},#{customAddress})
+    </insert>
+
+    <delete id="deleteCustom" parameterType="int">
+        delete from crmkhgx.custom where customId = #{customId}
+    </delete>
+
+    <update id="updateCustom" parameterType="custom">
+        update crmkhgx.custom set customName=#{customName},customFrom=#{customFrom},customWork=#{customWork},customLevel=#{customLevel},customTel=#{customTel},customPhone=#{customPhone},customCode=#{customCode},customAddress=#{customAddress}
+                            where customId = #{customId}
+    </update>
+
+    <select id="queryCustom" parameterType="String" resultType="custom">
+        select *
+        from crmkhgx.custom where 1=1
+        <if test="customMsg != null and customMsg != ''">
+            and ((customName like "%"#{customMsg}"%")
+                or (customTel like "%"#{customMsg}"%")
+                or (customAddress like "%"#{customMsg}"%"))
+        </if>
+
+    </select>
+
+    <select id="queryByCustomId" resultType="custom">
+        select *
+        from crmkhgx.custom where customId = #{customId};
+    </select>
+
+
+    <select id="queryCustomFrom" resultMap="customFromMap">
+        select customFrom, count(*) as count from crmkhgx.custom group by customFrom having count > 1 order by count desc
+    </select>
+
+    <resultMap id="customFromMap" type="java.util.HashMap">
+        <result column="customFrom" property="customFrom" javaType="java.lang.String"/>
+        <result column="count" property="count" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <!--<select id="queryCustomFrom2" resultType="java.util.Map">
+        select customFrom, count(*) as count from crmkhgx.custom group by customFrom having count > 1
+    </select>-->
+
+</mapper>

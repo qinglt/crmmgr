@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qing.dao.MassageMapper">
+
+    <select id="queryAllMsg" resultType="massage">
+        select * from crmkhgx.massage order by msgTime desc
+    </select>
+
+    <insert id="addMsg" parameterType="massage">
+        insert into crmkhgx.massage (msgId, msgWorker, msgDetail, msgTime)
+        values (null,#{msgWorker},#{msgDetail},#{msgTime})
+    </insert>
+
+</mapper>

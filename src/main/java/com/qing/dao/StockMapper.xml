@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qing.dao.StockMapper">
+
+   <insert id="addStock" parameterType="stock">
+       insert into crmkhgx.stock (stockId, stockUnit, stockName, stockPrice, stockOut, stockLeft)
+       values (null,#{stockUnit},#{stockName},#{stockPrice},#{stockOut},#{stockLeft})
+   </insert>
+
+   <update id="updateStock" parameterType="stock">
+       update crmkhgx.stock set stockUnit=#{stockUnit},stockName=#{stockName},stockPrice=#{stockPrice},stockOut=#{stockOut},stockLeft=#{stockLeft}
+       where stockId=#{stockId}
+   </update>
+
+    <select id="queryAllStock" resultType="stock">
+        select * from crmkhgx.stock where 1=1
+        <if test="stockMsg != null and stockMsg != ''">
+            and stockName like "%"#{stockMsg}"%"
+        </if>
+
+    </select>
+
+    <select id="queryByStockId" parameterType="int" resultType="Stock">
+        select * from crmkhgx.stock where stockId = #{stockId}
+    </select>
+
+    <select id="queryByStockName" parameterType="String" resultType="stock">
+        select * from crmkhgx.stock where stockName = #{stockName}
+    </select>
+
+</mapper>

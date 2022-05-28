@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qing.dao.DealMapper">
+
+    <insert id="addDeal" parameterType="deal">
+        insert into crmkhgx.deal(dealId, dealName, dealCustom, dealPeople, dealAddress, dealPhone, dealTime, dealWorker, dealStock, dealNumber, dealDetail, dealState)
+        values (null,#{dealName},#{dealCustom},#{dealPeople},#{dealAddress},#{dealPhone},#{dealTime},#{dealWorker},#{dealStock},#{dealNumber},#{dealDetail},#{dealState});
+    </insert>
+
+    <select id="queryAllDeal" parameterType="String" resultType="deal">
+        select * from crmkhgx.deal where 1=1
+        <if test="dealTime == '近7天'">
+            and date_sub(curdate(), INTERVAL 7 day) &lt;= date(dealTime)
+        </if>
+        <if test="dealTime == '近30天'">
+            and date_sub(curdate(), INTERVAL 30 day) &lt;= date(dealTime)
+        </if>
+        order by dealTime desc
+
+    </select>
+
+    <select id="queryDealByWorkerId" parameterType="String" resultType="deal">
+        select * from crmkhgx.deal  where dealWorker = #{workerId} order by dealTime desc
+    </select>
+
+    <update id="updateDeal" parameterType="deal">
+        update crmkhgx.deal set dealName=#{dealName},
+                                dealCustom=#{dealCustom},
+                                dealPeople=#{dealPeople},
+                                dealAddress=#{dealAddress},
+                                dealPhone=#{dealPhone},
+                                dealTime=#{dealTime},
+                                dealWorker=#{dealWorker},
+                                dealStock=#{dealStock},
+                                dealNumber=#{dealNumber},
+                                dealDetail=#{dealDetail},
+                                dealState=#{dealState}
+                            where dealId = #{dealId}
+    </update>
+
+    <select id="queryDealId" parameterType="int" resultType="deal">
+        select * from crmkhgx.deal where dealId = #{dealId}
+    </select>
+
+    <select id="updateDealState" parameterType="int">
+        update crmkhgx.deal set dealState = '已出库' where dealId = #{dealId}
+    </select>
+
+    <select id="queryWorkerDealByMsg" parameterType="String" resultType="deal">
+        select * from crmkhgx.deal where dealWorker = #{workerId}
+        <if test="msg != null and msg != ''">
+            and (dealName like "%"#{msg}"%" or dealCustom = like "%"#{msg}"%" or dealStock = like "%"#{msg}"%")
+        </if>
+        order by dealTime desc
+    </select>
+
+    <select id="queryWorkerDeal" resultMap="workerDealMap">
+        select dealWorker, count(*) as count from crmkhgx.deal group by dealWorker having count > 1 order by count desc
+    </select>
+
+    <resultMap id="workerDealMap" type="java.util.HashMap">
+        <result column="dealWorker" property="dealWorker" javaType="java.lang.String"/>
+        <result column="count" property="count" javaType="java.lang.Integer"/>
+    </resultMap>
+
+</mapper>
